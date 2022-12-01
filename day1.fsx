@@ -1,8 +1,7 @@
 let input =
     System.IO.File.ReadAllText "inputs/day1.txt"
     |> fun file -> file.Split "\n\n"
-    |> Array.map (fun calorieList -> calorieList.Split "\n")
-    |> Array.map (Array.map int)
+    |> Array.map ((fun calorieList -> calorieList.Split "\n") >> Array.map int)
 
 let elvesSortedByCalories = input |> Array.map (Array.sum) |> Array.sortDescending
 
