@@ -1,3 +1,7 @@
+let fst3 = fun (a, _, _) -> a
+let snd3 = fun (_, b, _) -> b
+let thrd3 = fun (_, _, c) -> c
+
 let draw = 3
 let win = 6
 let rock = 1
@@ -14,15 +18,15 @@ let RPSMoveOutcomes =
        ("C X", rock + win, paper) // Scissor vs Rock, lose
        ("C Y", paper, scissor + draw) // Scissor vs Paper, draw
        ("C Z", scissor + draw, rock + win) |] // Scissor vs Scissor, win
-    |> Array.groupBy (fun (a, _, _) -> a)
+    |> Array.groupBy fst3
     |> dict
 
 let gamePlayedByStrategies =
     System.IO.File.ReadAllLines "inputs/day2.txt"
     |> Array.map (fun move -> RPSMoveOutcomes.[move] |> Array.head)
 
-let answer1 = gamePlayedByStrategies |> Array.sumBy (fun (_, strategy1, _) -> strategy1)
-let answer2 = gamePlayedByStrategies |> Array.sumBy (fun (_, _, strategy2) -> strategy2)
+let answer1 = gamePlayedByStrategies |> Array.sumBy snd3
+let answer2 = gamePlayedByStrategies |> Array.sumBy thrd3
 
 printfn "Answer 1: %i" answer1
 printfn "Answer 2: %i" answer2
