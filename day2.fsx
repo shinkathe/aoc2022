@@ -1,5 +1,3 @@
-let split (separator: string) (s: string) = s.Split separator
-
 let draw = 3
 let win = 6
 let rock = 1
@@ -20,8 +18,7 @@ let RPSMoveOutcomes =
     |> dict
 
 let gamePlayedByStrategies =
-    System.IO.File.ReadAllText "inputs/day2.txt"
-    |> split "\n"
+    System.IO.File.ReadAllLines "inputs/day2.txt"
     |> Array.map (fun move -> RPSMoveOutcomes.[move] |> Array.head)
 
 let answer1 = gamePlayedByStrategies |> Array.sumBy (fun (_, strategy1, _) -> strategy1)
