@@ -1,6 +1,5 @@
 let split (separator: string) (s: string) = s.Split separator
 
-let loss = 0
 let draw = 3
 let win = 6
 let rock = 1
