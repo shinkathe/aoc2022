@@ -1,19 +1,18 @@
 let characterToPriority c =
     if int c >= 97 then int c - 96 else int c - 38
 
-let findIntersections = Array.map Set.ofArray >> Set.intersectMany >> Set.toArray
+let intersectInsideRucksack rucksack =
+    rucksack
+    |> Seq.map (Seq.splitInto 2 >> Seq.map set >> Set.intersectMany >> Seq.head)
 
-let intersectOverRucksacks (rucksackCount: int) (rucksacks: int[][]) =
+let intersectOverRucksacks rucksacks =
     rucksacks
-    |> Array.chunkBySize rucksackCount
-    |> Array.map (findIntersections >> Array.head)
-
-let intersectInsideRucksack =
-    Array.map (Array.splitInto 2) >> Array.map (findIntersections >> Array.head)
+    |> Seq.chunkBySize 3
+    |> Seq.map (Seq.map set >> Set.intersectMany >> Seq.head)
 
 let rucksack =
     System.IO.File.ReadAllLines "inputs/day3.txt"
-    |> Array.map (id >> Seq.toArray >> Array.map characterToPriority)
+    |> Seq.map (Seq.map characterToPriority)
 
-rucksack |> intersectInsideRucksack |> Array.sum |> printfn "Answer 1: %A"
-rucksack |> intersectOverRucksacks 3 |> Array.sum |> printfn "Answer 2: %i"
+rucksack |> intersectInsideRucksack |> Seq.sum |> printfn "Answer 1: %A"
+rucksack |> intersectOverRucksacks |> Seq.sum |> printfn "Answer 2: %A"
