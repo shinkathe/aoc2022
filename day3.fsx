@@ -3,8 +3,8 @@ let characterToPriority c =
 
 let findIntersections = Array.map Set.ofArray >> Set.intersectMany >> Set.toArray
 
-let intersectOverRucksacks (rucksackCount: int) (e: int[][]) =
-    e
+let intersectOverRucksacks (rucksackCount: int) (rucksacks: int[][]) =
+    rucksacks
     |> Array.chunkBySize rucksackCount
     |> Array.map (findIntersections >> Array.head)
 
