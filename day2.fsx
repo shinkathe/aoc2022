@@ -1,6 +1,6 @@
-let fst3 = fun (a, _, _) -> a
-let snd3 = fun (_, b, _) -> b
-let thrd3 = fun (_, _, c) -> c
+let fst3 (a, _, _) = a
+let snd3 (_, b, _) = b
+let thrd3 (_, _, c) = c
 
 let draw = 3
 let win = 6
