@@ -6,13 +6,13 @@ let skipLast a = a |> Array.take (a.Length - 1)
 let findClosest elements curr = match elements |> Array.tryFindIndex (fun f -> f >= curr) with | Some x -> x + 1 | None -> elements.Length
 let canSeeOutside elements curr = match elements |> Array.tryFindIndex (fun f -> f >= curr) with | Some _ -> false | None -> true
 
-let distanceToClosestBlockingLookLeft x y fn = fn (trees[y, 0..x] |> skipLast |> Array.rev) trees[y, x]
-let distanceToClosestBlockingLookUp x y fn = fn (trees[0..y, x] |> skipLast |> Array.rev) trees[y, x]
-let distanceToClosestBlockingLookRight x y fn = fn (trees[y, x..(trees[y, *].Length)] |> Array.tail) trees[y, x]
-let distanceToClosestBlockingLookDown x y fn = fn (trees[y..(trees[*, x].Length), x] |> Array.tail) trees[y, x]
+let lookLeft x y fn = fn (trees[y, 0..x] |> skipLast |> Array.rev) trees[y, x]
+let lookUp x y fn = fn (trees[0..y, x] |> skipLast |> Array.rev) trees[y, x]
+let lookRight x y fn = fn (trees[y, x..(trees[y, *].Length)] |> Array.tail) trees[y, x]
+let lookDown x y fn = fn (trees[y..(trees[*, x].Length), x] |> Array.tail) trees[y, x]
 
-trees |> Array2D.mapi (fun i j _ -> distanceToClosestBlockingLookLeft i j canSeeOutside || distanceToClosestBlockingLookRight i j canSeeOutside || distanceToClosestBlockingLookDown i j canSeeOutside || distanceToClosestBlockingLookUp i j canSeeOutside)
+trees |> Array2D.mapi (fun i j _ -> lookLeft i j canSeeOutside || lookRight i j canSeeOutside || lookDown i j canSeeOutside || lookUp i j canSeeOutside)
     |> Seq.cast<bool> |> Seq.where((=) true) |> Seq.length |> printfn "Answer1 : %A"
 
-trees |> Array2D.mapi (fun i j _ -> distanceToClosestBlockingLookLeft i j findClosest * distanceToClosestBlockingLookRight i j findClosest * distanceToClosestBlockingLookDown i j findClosest * distanceToClosestBlockingLookUp i j findClosest)
+trees |> Array2D.mapi (fun i j _ -> lookLeft i j findClosest * lookRight i j findClosest * lookDown i j findClosest * lookUp i j findClosest)
     |> Seq.cast<int> |> Seq.sortDescending |> Seq.head |> printfn "Answer2 : %A"
