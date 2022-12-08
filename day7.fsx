@@ -1,8 +1,5 @@
 open System
-
-let startsWith (s: string) (w: string) = s.StartsWith(w)
-let split (separator: string) (s: string) = s.Split separator
-let commands = System.IO.File.ReadAllLines "inputs/day7.txt" |> (Array.map (split " "))
+let commands = System.IO.File.ReadAllLines "inputs/day7.txt" |> (Array.map (fun s -> s.Split " "))
 
 let cmd cwd = function
     | [| "$"; "cd"; ".." |] -> Array.take (Array.length cwd - 1) cwd
@@ -22,9 +19,8 @@ let foldersBySize =
     |> snd
     |> Array.groupBy (fst)
     |> Array.map (fun (path, sizes) -> (String.Join("/", path), Array.sumBy (snd) sizes))
-    |> Array.fold
-        (fun acc (dir, size) ->
-            let sizesCombined = acc |> Array.map (fun (subDir: string, subDirSize) -> subDir, if startsWith dir subDir then subDirSize + size else subDirSize)
+    |> Array.fold (fun acc (dir, size) ->
+            let sizesCombined = acc |> Array.map (fun (subDir: string, subDirSize) -> subDir, if dir.StartsWith(subDir) then subDirSize + size else subDirSize)
             Array.concat [| [| (dir, size) |]; sizesCombined |])
         [||]
 
