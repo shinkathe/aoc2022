@@ -13,8 +13,8 @@ let foldersBySize =
         (fun (cwd, folders) command ->
             cmd cwd command, 
             match Int32.TryParse(Array.head command) with
-                | true, num -> Array.append folders [| cwd, (num) |]
-                | _ -> Array.append folders [| cwd, (0) |])
+                | true, num -> Array.append folders [| cwd, num |]
+                | _ -> Array.append folders [| cwd, 0 |])
        ([| "base" |], [||])
     |> snd
     |> Array.groupBy (fst)
