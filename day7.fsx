@@ -14,24 +14,18 @@ let foldersBySize =
     commands
     |> Seq.fold
         (fun (cwd, folders) command ->
-            let currentDir = cmd cwd command
-            let newFolders =
-                match Int32.TryParse(Array.head command) with
-                | true, num -> Array.append folders [| currentDir, (num) |]
-                | _ -> Array.append folders [| currentDir, (0) |]
-            (currentDir, newFolders))
+            cmd cwd command, 
+            match Int32.TryParse(Array.head command) with
+                | true, num -> Array.append folders [| cwd, (num) |]
+                | _ -> Array.append folders [| cwd, (0) |])
         ([| "base" |], [||])
     |> snd
     |> Array.groupBy (fst)
     |> Array.map (fun (path, sizes) -> (String.Join("/", path), Array.sumBy (snd) sizes))
     |> Array.fold
         (fun acc (dir, size) ->
-            let recomputedAcc =
-                acc
-                |> Array.map (fun (subDirectory: string, subDirSize) ->
-                    subDirectory,
-                    if startsWith dir subDirectory then subDirSize + size else subDirSize)
-            Array.concat [| [| (dir, size) |]; recomputedAcc |])
+            let sizesCombined = acc |> Array.map (fun (subDir: string, subDirSize) -> subDir, if startsWith dir subDir then subDirSize + size else subDirSize)
+            Array.concat [| [| (dir, size) |]; sizesCombined |])
         [||]
 
 printfn "Answer 1: %i" (foldersBySize |> Array.sumBy (fun (_, size) -> if size <= 100000 then size else 0))
