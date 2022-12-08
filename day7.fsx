@@ -24,4 +24,5 @@ let foldersBySize =
             Array.concat [| [| (dir, size) |]; sizesCombined |]) [||]
 
 printfn "Answer 1: %i" (foldersBySize |> Array.sumBy (fun (_, size) -> if size <= 100000 then size else 0))
-printfn "Answer 2: %A" (foldersBySize |> Array.where (snd >> (<=) (foldersBySize |> Array.find (fun (a, _) -> a = "base") |> (snd >> (+) 30000000 >> (+) -70000000))) |> Array.sortBy (snd) |> Array.head)
+printfn "Answer 2: %A" (foldersBySize |> Array.where (snd >> (<=) (foldersBySize |> 
+    Array.find (fun (a, _) -> a = "base") |> (snd >> (+) 30000000 >> (+) -70000000))) |> Array.sortBy (snd) |> Array.head)
