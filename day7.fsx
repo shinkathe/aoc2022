@@ -13,9 +13,9 @@ let foldersBySize =
         (fun (cwd, folders) command ->
             cmd cwd command, 
             match Int32.TryParse(Array.head command) with
-                | true, num -> Array.append folders [| cwd, (num) |]
+ | true, num -> Array.append folders [| cwd, (num) |]
                 | _ -> Array.append folders [| cwd, (0) |])
-        ([| "base" |], [||])
+       ([| "base" |], [||])
     |> snd
     |> Array.groupBy (fst)
     |> Array.map (fun (path, sizes) -> (String.Join("/", path), Array.sumBy (snd) sizes))
@@ -24,6 +24,4 @@ let foldersBySize =
             Array.concat [| [| (dir, size) |]; sizesCombined |]) [||]
 
 printfn "Answer 1: %i" (foldersBySize |> Array.sumBy (fun (_, size) -> if size <= 100000 then size else 0))
-
-let limit = foldersBySize |> Array.find (fun (a, _) -> a = "base") |> (snd >> (+) 30000000 >> (+) -70000000)
-printfn "Answer 2: %A" (foldersBySize |> Array.where (snd >> (<=) limit) |> Array.sortBy (snd) |> Array.head)
+printfn "Answer 2: %A" (foldersBySize |> Array.where (snd >> (<=) (foldersBySize |> Array.find (fun (a, _) -> a = "base") |> (snd >> (+) 30000000 >> (+) -70000000))) |> Array.sortBy (snd) |> Array.head)
