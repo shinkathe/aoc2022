@@ -1,6 +1,6 @@
 open System
 let commands = System.IO.File.ReadAllLines "inputs/day7.txt" |> (Array.map (fun s -> s.Split " "))
-
+let parseOrDefault (str:string) (defaultTo:int) = match System.Int32.TryParse str with | true, int -> int | _ -> defaultTo
 let cmd cwd = function
     | [| "$"; "cd"; ".." |] -> Array.take (Array.length cwd - 1) cwd
     | [| "$"; "cd"; "/" |] -> [| "base" |]
@@ -12,9 +12,7 @@ let foldersBySize =
     |> Seq.fold
         (fun (cwd, folders) command ->
             cmd cwd command, 
-            match Int32.TryParse(Array.head command) with
-                | true, num -> Array.append folders [| cwd, (num) |]
-                | _ -> Array.append folders [| cwd, (0) |])
+            Array.append folders [| cwd, (parseOrDefault (Array.head command) 0) |])
        ([| "base" |], [||])
     |> snd
     |> Array.groupBy (fst)
