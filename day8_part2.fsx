@@ -15,12 +15,5 @@ let distanceToClosestBlockingLookRight x y = findClosest (arr[y, x..(arr[y, *].L
 let distanceToClosestBlockingLookDown x y = findClosest (arr[y..(arr[*, x].Length), x] |> Array.tail) arr[y, x]
 
 arr
-|> Array2D.mapi (fun i j v ->
-    distanceToClosestBlockingLookLeft i j
-    * distanceToClosestBlockingLookRight i j
-    * distanceToClosestBlockingLookDown i j
-    * distanceToClosestBlockingLookUp i j)
-|> Seq.cast<int>
-|> Seq.sortDescending
-|> Seq.head
-|> printfn "Answer2 : %A"
+|> Array2D.mapi (fun i j v -> distanceToClosestBlockingLookLeft i j * distanceToClosestBlockingLookRight i j * distanceToClosestBlockingLookDown i j * distanceToClosestBlockingLookUp i j)
+    |> Seq.cast<int> |> Seq.sortDescending |> Seq.head |> printfn "Answer2 : %A"
