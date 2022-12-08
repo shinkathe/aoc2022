@@ -9,11 +9,7 @@ let cmd cwd = function
 
 let foldersBySize =
     commands
-    |> Seq.fold
-        (fun (cwd, folders) command ->
-            cmd cwd command, 
-            Array.append folders [| cwd, (parseOrDefault (Array.head command) 0) |])
-       ([| "base" |], [||])
+    |> Seq.fold (fun (cwd, folders) command -> cmd cwd command, Array.append folders [| cwd, (parseOrDefault (Array.head command) 0) |]) ([| "base" |], [||])
     |> snd
     |> Array.groupBy (fst)
     |> Array.map (fun (path, sizes) -> (String.Join("/", path), Array.sumBy (snd) sizes))
