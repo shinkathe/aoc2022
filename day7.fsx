@@ -9,8 +9,7 @@ let cmd cwd = function
 let foldersBySize =
     System.IO.File.ReadAllLines "inputs/day7.txt" |> (Array.map (fun s -> s.Split " "))
     |> Seq.fold (fun (cwd, folders) command -> cmd cwd command, Array.append folders [| cwd, (parseOrDefault (Array.head command) 0) |]) ([| "base" |], [||])
-    |> snd
-    |> Array.groupBy (fst)
+    |> snd |> Array.groupBy (fst)
     |> Array.map (fun (path, sizes) -> (String.Join("/", path), Array.sumBy (snd) sizes))
     |> Array.fold (fun acc (dir, size) ->
             let sizesCombined = acc |> Array.map (fun (subDir: string, subDirSize) -> subDir, if dir.StartsWith(subDir) then subDirSize + size else subDirSize)
