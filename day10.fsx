@@ -8,9 +8,9 @@ let cycles =
     instructions
      |> Array.fold (fun acc instruction ->
         let index, register = Array.last acc
-        match instruction with
-            | 0 -> Array.concat [|acc; [|(index + 1, register)|]|]
-            | x -> Array.concat [|acc; [|(index + 1, register)|]; [|(index + 2), register + x|]|]
+        Array.concat (match instruction with
+            | 0 -> [|acc; [|(index + 1, register)|]|]
+            | x -> [|acc; [|(index + 1, register)|]; [|(index + 2), register + x|]|])
         ) [|(1, 1)|]
 
 [|20;60;100;140;180;220|] |> Array.sumBy (fun i -> (cycles[i-1] |> snd) * i) |> printfn "Answer 1: %A"
