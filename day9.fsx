@@ -9,7 +9,7 @@ let computeMovement (x1, y1) (x2, y2) =
     clampDeltaByDistance distance (x2 - x1), clampDeltaByDistance distance (y2 - y1)
 
 let head = Seq.scan (add) (0, 0)
-let tail = Seq.scan (fun from target -> add from (computeMovement from target)) (0, 0)
+let tail = Seq.scan (fun from target -> (from, target) ||> computeMovement |> add from) (0, 0)
 
 let ops = System.IO.File.ReadLines "inputs/day9_r.txt" |> Seq.map (fun s -> s[0], int s[2..]) |> Seq.collect (fun (dir, amount) -> [|1..amount|] |> Seq.map (fun _ -> move dir))
 
