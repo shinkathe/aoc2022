@@ -9,9 +9,10 @@ let computeMovement (x1, y1) (x2, y2) =
     let distance = Vector2.Distance(Vector2((float32 x1), (float32 y1)), Vector2((float32 x2), (float32 y2)))
     (distanceClamped distance dx), (distanceClamped distance dy)
 
+let head =  Seq.scan (add) (0, 0)
 let tail = Seq.scan(fun from target -> add from (computeMovement from target)) (0, 0)
-let ops = System.IO.File.ReadAllLines "inputs/day9_r.txt" |> Seq.map ((fun ln -> ln.Split " ") >> fun ([|dir; amount|]) -> (dir, int amount)) |> Seq.collect (fun (dir, amount) -> [|1..amount|] |> Seq.map (fun _ -> move dir))
-let printAnswer str fn = ops |> Seq.scan (add) (0, 0) |> fn |> Seq.distinct |> Seq.length |> printfn str
 
-printAnswer "Answer 1 %A" tail
-printAnswer "Answer 2 %A" (tail >> tail >> tail >> tail >> tail >> tail >> tail >> tail >> tail)
+let ops = System.IO.File.ReadAllLines "inputs/day9_r.txt" |> Seq.map ((fun ln -> ln.Split " ") >> fun ([|dir; amount|]) -> (dir, int amount)) |> Seq.collect (fun (dir, amount) -> [|1..amount|] |> Seq.map (fun _ -> move dir))
+
+ops |> (head >> tail >> Seq.distinct >> Seq.length) |> printfn "Answer 1: %A"
+ops |> (head >> tail >> tail >> tail >> tail >> tail >> tail >> tail >> tail >> tail >> Seq.distinct >> Seq.length) |> printfn "Answer 2: %A"
